@@ -1,471 +1,397 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>RedWing Robotics — Official Site</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RedWing Tech</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://uploads.onecompiler.io/43pz8jcrg/443szxnxe/slide1_logo.png.png
+" rel="stylesheet">
 
-<style>
-  /* === Base / Vars === */
-  :root{
-    --accent-red:#ff004d;
-    --accent-blue:#00b7ff;
-    --glass:rgba(255,255,255,0.04);
-    --muted:#bfc8d1;
-    --btn-grad: linear-gradient(90deg,var(--accent-red),#b3003a);
-    --btn-radius:28px;
-    --nav-height:76px;
-    --maxw:1200px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
-    font-family:"Lexend",system-ui,Arial;
-    background:#0b0e15;
-    color:#eaeaea;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.8;
-    overflow-x:hidden;
-  }
-  a{color:#fff}
-  img{max-width:100%;display:block}
+  <style>
+    :root{
+      --cardinal: #b51b2f;
+      --cardinal-2: #ff3b56;
+      --cyan: #00f2ff;
+      --bg-1: #050507;
+      --bg-2: #120206;
+      --muted: #9aa7b3;
+      --glass: rgba(255,255,255,0.03);
+      --radius: 12px;
+      --shadow: 0 18px 50px rgba(0,0,0,0.6);
+    }
+    html,body{height:100%;margin:0;background: linear-gradient(180deg,var(--bg-1),var(--bg-2)); color:#e9f0f2; font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial; -webkit-font-smoothing:antialiased;}
+    .app{ max-width:1200px; margin:18px auto; padding:18px; position:relative; z-index:2; }
 
-  /* === NAVBAR === */
-  nav{
-    position:fixed;top:0;left:0;right:0;height:var(--nav-height);
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0 22px;background:linear-gradient(180deg, rgba(10,10,12,0.86), rgba(6,6,8,0.45));
-    backdrop-filter:blur(8px);z-index:1000;border-bottom:1px solid rgba(255,255,255,0.03)
-  }
-  .brand{
-    cursor:pointer;color:var(--accent-red);font-weight:800;font-size:1.05rem;user-select:none;
-    letter-spacing:0.6px;
-  }
-  .nav-links{display:flex;gap:14px;align-items:center}
-  .nav-item{position:relative}
-  .nav-item > a{
-    color:#fff;text-decoration:none;font-weight:700;padding:8px 10px;border-radius:8px;display:inline-block;
-    transition:transform .15s, background .15s;
-  }
-  .nav-item > a:hover{transform:translateY(-3px);background:rgba(255,255,255,0.02)}
-  /* preview dropdown (hover / persistent) */
-  .preview{
-    position:absolute;top:calc(100% + 10px);left:0;min-width:220px;background:#0f1724;border-radius:10px;padding:8px;border:1px solid rgba(255,255,255,0.06);
-    box-shadow:0 8px 30px rgba(0,0,0,0.6);display:none;flex-direction:column;z-index:1100;
-  }
-  .preview a{color:#ddd;padding:8px;border-radius:6px;text-decoration:none}
-  .preview a:hover{background:rgba(255,0,77,0.12);color:#fff}
+    /* CLICKABLE CORNER LOGO (replace the <img> src with the exact Base64 logo) */
+    .corner-logo{
+      position:fixed; left:18px; top:18px; z-index:120; width:68px; height:68px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg,var(--cardinal), #280009); box-shadow: 0 14px 48px rgba(181,27,47,0.12); cursor:pointer; border:1px solid rgba(255,255,255,0.03);
+    }
+    .corner-logo img{ width:64px; height:64px; object-fit:contain; border-radius:10px; display:block; }
 
-  /* search */
-  .search-box{background:var(--glass);padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center}
-  .search-box input{background:transparent;border:none;color:#fff;outline:none;width:220px;font-weight:600}
-  @media(max-width:920px){.search-box{display:none}.nav-links{gap:10px}}
+    /* Header auto-hide */
+    header.topbar{
+      position:fixed; left:50%; transform:translateX(-50%); top:18px; width:calc(100% - 220px); max-width:980px; padding:10px 12px; border-radius:12px;
+      display:flex; align-items:center; gap:12px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); backdrop-filter: blur(8px);
+      transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease; z-index:110;
+    }
+    header.topbar.hidden{ transform: translate(-50%, -26px); opacity:0; pointer-events:none; }
 
-  /* login */
-  .login-btn{background:var(--btn-grad);padding:8px 12px;border-radius:12px;border:none;color:#fff;font-weight:700;cursor:pointer}
-  .login-btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:7px 10px}
+    .site-title{ font-family: 'Orbitron', sans-serif; color:var(--cardinal-2); font-weight:700; font-size:1.05rem; }
+    nav.topnav{ margin-left:auto; display:flex; gap:10px; align-items:center; }
+    nav.topnav a{ color:var(--muted); text-decoration:none; padding:8px 12px; border-radius:9px; font-weight:700; transition:all 180ms; }
+    nav.topnav a:hover{ color:#fff; transform:translateY(-3px); }
+    nav.topnav a.active{ color:#fff; box-shadow:0 10px 30px rgba(181,27,47,0.12); }
 
-  /* === hero === */
-  .hero{
-    padding:calc(var(--nav-height) + 36px) 20px 48px;min-height:86vh;display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center;
-    max-width:var(--maxw);margin:0 auto;
-  }
-  @media(max-width:920px){.hero{grid-template-columns:1fr;padding-top:110px}}
-  .eyebrow{color:var(--muted);text-transform:uppercase;font-weight:700;font-size:0.82rem;margin-bottom:12px;letter-spacing:1.6px}
-  .main-title{font-size:2.4rem;color:#fff;font-weight:800;margin-bottom:8px}
-  .typewriter{color:var(--accent-red);font-weight:800;font-size:1.4rem;min-height:1.6em;margin-bottom:12px}
-  .lead{color:var(--muted);font-size:1rem;max-width:700px;margin-bottom:14px}
+    .search{ margin-left:12px; display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.02); }
+    .search input{ background:transparent; border:none; outline:none; color:#e7fbff; width:200px; font-weight:600; padding:6px 4px; }
 
-  .hero-illustration{background:var(--glass);border-radius:14px;padding:12px;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-  .hero-illustration img{width:100%;height:420px;object-fit:cover;border-radius:10px}
-  @media(max-width:920px){.hero-illustration img{height:300px}}
+    /* Hero */
+    .hero{ margin-top:100px; padding:28px; border-radius:12px; display:grid; grid-template-columns: 1fr 520px; gap:28px; align-items:center; 
+           background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--shadow);}
+    .hero-left{ padding:6px 8px; }
+    .typewriter{ font-family:'Lexend', sans-serif; font-size:2.25rem; color:var(--cardinal); font-weight:700; letter-spacing:0.6px; display:inline-block; }
+    .cursor{ display:inline-block; width:10px; height:34px; background:linear-gradient(180deg,var(--cardinal-2),#ff9aa6); margin-left:8px; border-radius:3px; animation: blink 1s steps(2) infinite; vertical-align:middle;}
+    @keyframes blink{ 0%{opacity:1}50%{opacity:0}100%{opacity:1} }
 
-  .cta-row{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap}
-  .btn{background:var(--btn-grad);padding:10px 16px;border-radius:var(--btn-radius);border:none;color:#fff;font-weight:800;cursor:pointer;box-shadow:0 8px 30px rgba(179,0,58,0.08);transition:transform .18s}
-  .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff}
-  .btn:hover{transform:translateY(-4px)}
+    .hero-sub{ color:var(--muted); margin-top:12px; line-height:1.5; font-weight:600; white-space:pre-line; }
+    .hero-ctas{ margin-top:18px; display:flex; gap:12px; flex-wrap:wrap; }
+    .btn{ padding:12px 18px; border-radius:12px; border:none; cursor:pointer; font-weight:800; font-family:'Orbitron',sans-serif; }
+    .btn.primary{ background: linear-gradient(90deg,var(--cardinal),var(--cardinal-2)); color:white; box-shadow:0 18px 46px rgba(181,27,47,0.16); }
+    .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); }
 
-  /* === sections === */
-  section.site-section{padding:44px 18px;max-width:var(--maxw);margin:0 auto}
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-  @media(max-width:920px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--glass);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
-  .card h3{color:#fff;margin-bottom:8px}
-  .card .sub{color:var(--accent-red);font-weight:800;margin-bottom:8px}
-  .muted{color:var(--muted);font-weight:600}
+    /* gallery visuals */
+    .visual-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap:12px; width:100%; }
+    .viz-card{ border-radius:12px; padding:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:center; min-height:140px; overflow:hidden; }
+    .viz-card img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-  .center{display:flex;justify-content:center}
+    /* site overview */
+    .site-overview{ margin-top:18px; margin-bottom:6px; padding:18px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .overview-line1{ display:flex; align-items:center; gap:12px; }
+    .overview-logo{ width:96px; height:96px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,var(--cardinal),#2a0016); box-shadow:0 12px 36px rgba(181,27,47,0.12); overflow:hidden; }
+    .overview-line2{ display:flex; gap:18px; align-items:center; margin-top:6px; }
+    .overview-line2 a{ font-family:'Orbitron',sans-serif; color:var(--cardinal-2); background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01)); padding:8px 14px; border-radius:10px; text-decoration:none; transition:transform 220ms; }
+    .overview-line2 a:hover{ transform:translateY(-4px); color:#fff; box-shadow:0 12px 36px rgba(181,27,47,0.12); }
+    .overview-line3{ color:var(--muted); text-align:center; max-width:980px; font-weight:600; white-space:pre-line; }
 
-  /* footer */
-  footer{padding:40px 20px;background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.04);text-align:center;color:var(--muted)}
-  footer img{height:56px;margin-bottom:10px}
+    /* panels */
+    section.panel{ margin-top:18px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border:1px solid rgba(255,255,255,0.03); box-shadow:var(--shadow); }
+    section.panel h2{ font-family:'Orbitron',sans-serif; color:var(--cardinal-2); margin:0 0 8px 0; font-size:1.05rem; }
+    .grid-2{ display:grid; grid-template-columns: repeat(2,1fr); gap:14px; }
 
-  /* small reveal */
-  .fade{opacity:0;transform:translateY(12px);transition:all .6s ease}
-  .fade.show{opacity:1;transform:none}
+    /* newsletter */
+    .newsletter{ display:flex; gap:12px; align-items:center; margin-top:14px; padding:12px; border-radius:12px; background:rgba(255,255,255,0.02); }
+    .newsletter input{ flex:1; padding:12px 14px; border-radius:12px; border:none; background:rgba(255,255,255,0.01); color:#e7fbff; outline:none; }
 
-  /* modal login */
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:2200}
-  .modal .panel{background:#0b0f16;padding:20px;border-radius:12px;width:360px;border:1px solid rgba(255,255,255,0.04)}
-  .modal label{display:block;margin-bottom:6px;color:var(--muted);font-weight:700}
-  .modal input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;margin-bottom:12px}
-  .close-x{float:right;color:var(--muted);cursor:pointer;font-weight:800}
-  /* make preview persist (js controls) */
-</style>
+    footer.sitefoot{ text-align:center; margin-top:36px; color:var(--muted); font-size:0.95rem; opacity:0.95; }
+
+    /* responsive */
+    @media (max-width:980px){
+      .hero{ grid-template-columns: 1fr; }
+      nav.topnav{ display:none; }
+      .search input{ width:120px; }
+      .visual-grid{ grid-template-columns: 1fr 1fr; }
+      .overview-line2{ flex-wrap:wrap; justify-content:center; }
+    }
+
+    /* reveal */
+    .reveal-hidden{ opacity:0; transform:translateY(24px) scale(0.995); transition: all 700ms cubic-bezier(.2,.9,.2,1); }
+    .reveal-visible{ opacity:1; transform:translateY(0) scale(1); }
+  </style>
 </head>
 <body>
-
-<nav>
-  <!-- clickable site name (reloads) -->
-  <div class="brand" onclick="window.location.reload()">RedWing Robotics</div>
-
-  <!-- nav links; previews populated by JS -->
-  <div class="nav-links" role="navigation" aria-label="Main Navigation">
-    <div class="nav-item">
-      <a href="index.html">Home</a>
-      <div class="preview" data-for="home"></div>
-    </div>
-
-    <div class="nav-item">
-      <a href="programming.html">Programming</a>
-      <div class="preview" data-for="programming"></div>
-    </div>
-
-    <div class="nav-item">
-      <a href="cad.html">CAD</a>
-      <div class="preview" data-for="cad"></div>
-    </div>
-
-    <div class="nav-item">
-      <a href="building.html">Building</a>
-      <div class="preview" data-for="building"></div>
-    </div>
-
-    <div class="nav-item">
-      <a href="marketing.html">Marketing/Booth</a>
-      <div class="preview" data-for="marketing"></div>
-    </div>
-
-    <div class="nav-item">
-      <a href="sponsors.html">Sponsors</a>
-      <div class="preview" data-for="sponsors"></div>
-    </div>
-
-    <div class="nav-item">
-      <a href="Product.html">Product</a>
-      <div class="preview" data-for="Product"></div>
-    </div>
+  <!-- Corner logo (clickable). Replace image src with the Base64 data URI of the slide-1 logo -->
+  <div class="corner-logo" id="corner-logo" role="button" tabindex="0" aria-label="Home">
+    <!-- REPLACE WITH IMAGE: slide1_logo (PASTE DATA URI HERE) -->
+    <img id="corner-logo-img" src="data:image/png;base64,REPLACE_WITH_SLIDE1_LOGO_BASE64" alt="RedWing Tech logo">
   </div>
 
-  <div style="display:flex;gap:10px;align-items:center">
-    <div class="search-box" role="search">
-      <input id="siteSearch" placeholder="Search site or page" aria-label="Search">
-    </div>
-    <button class="login-btn" id="loginOpen">Login / Sign up</button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div>
-    <div class="eyebrow muted">Product Launch</div>
-
-    <!-- main title replaced with the typewriter red animated heading (user requested) -->
-    <div class="main-title">RedWing Tech presents</div>
-    <div id="typewriter" class="typewriter" aria-live="polite"></div>
-
-    <!-- Lead text — exact wording used from marketing presentation / notebook where applicable -->
-    <!-- Mission statement exact wording used (marketing presentation). -->
-    <p class="lead muted">
-      To empower engineering-minded students and industry partners to develop dependable robotic systems for real-world challenges through precise CAD-driven design, iterative testing, and thoughtful integration of intelligent control.
-    </p>
-
-    <div class="cta-row">
-      <button class="btn" onclick="location.href='Product.html'">Order Now</button>
-    </div>
-  </div>
-
-  <aside class="hero-illustration fade" aria-hidden="true">
-    <!-- hero image from OneCompiler images you provided -->
-    <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/Untitled%20design%20(1).png" alt="RedWing product showcase">
-  </aside>
-</section>
-
-
-
-<!-- Sections — each subheading uses text from your slide / notebook. -->
-<section id="mission" class="site-section fade">
-  <div class="grid">
-    <div class="card">
-      <div class="sub">Mission</div>
-      <h3>Design with intention</h3>
-      <!-- exact mission sentence used from presentation. See citation. -->
-      <p class="muted">To empower engineering-minded students and industry partners to develop dependable robotic systems for real-world challenges through precise CAD-driven design, iterative testing, and thoughtful integration of intelligent control.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/IMG_1408.JPG" alt="Mission Team" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation. -->
-      <!-- :contentReference[oaicite:5]{index=5} -->
-    </div>
-
-    <div class="card">
-      <div class="sub">Brand Promise</div>
-      <h3>M.A.D. — Melissa Always Delivers</h3>
-      <p class="muted"><strong>M A D — Melissa Always Delivers.</strong> Our commitment: thorough engineering documentation, repeatable manufacturing, and professional program stewardship.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/Screenshot%202025-12-02%20194728.png" alt="Brand promise" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation. -->
-      <!-- :contentReference[oaicite:6]{index=6} -->
-    </div>
-  </div>
-</section>
-
-<section id="engineering" class="site-section fade">
-  <div class="grid">
-    <div class="card">
-      <div class="sub">Engineering & AI Integration</div>
-      <h3>Precision meets intelligence</h3>
-      <!-- exact line from presentation / notebook describing CAD + AI integration -->
-      <p class="muted">CAD-backed mechanical design integrated with an AI-enabled control stack for perception and decisioning; modular software allows rapid iteration and data-driven improvements.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/Screenshot%202025-12-02%20195101.png" alt="Engineering and AI" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation. -->
-      <!-- :contentReference[oaicite:7]{index=7} -->
-    </div>
-
-    <div class="card">
-      <div class="sub">Financial Snapshot</div>
-      <h3>Project funding overview</h3>
-      <!-- exact financial lines from the presentation -->
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/Screenshot%202025-12-02%20195706.png" alt="Financial snapshot" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation. -->
-      <!-- :contentReference[oaicite:8]{index=8} -->
-    </div>
-  </div>
-</section>
-
-<section id="features" class="site-section fade">
-  <div class="grid">
-    <div class="card">
-      <div class="sub">Robot Features</div>
-      <h3>Core capabilities</h3>
-      <!-- features pulled verbatim from marketing presentation (features slides). -->
-      <p class="muted">MAGNET-POWERED SORTING SYSTEM · DATA COLLECTION SYSTEM · DIFFERENTIATION · ROBUST DESIGN · LIGHT BASE · EFFECTIVE CLAW · ADVANCED WHEELS · EFFICIENT MOVEMENT.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/443ym7red/image_031.png" alt="Robot features illustration" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation features slides. -->
-      <!-- :contentReference[oaicite:9]{index=9} -->
-    </div>
-
-    <div class="card">
-      <div class="sub">Manufacturing & Pricing</div>
-      <h3>Exploded BOM & pricing</h3>
-      <p class="muted">Cost and production models were prepared including research, development, labor, and per-unit pricing across volume tiers; warranty and aftermarket support are defined in product materials.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/OIP%20(3).webp" alt="BOM" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation. -->
-      <!-- :contentReference[oaicite:10]{index=10} -->
-    </div>
-  </div>
-</section>
-
-
-<!-- Additional sections (testimonials / community / sustainability) -->
-<section id="social" class="site-section fade">
-  <div class="grid">
-    <div class="card">
-      <div class="sub">Testimonials</div>
-      <h3>Community & mentors</h3>
-      <p class="muted">“The Robotics program at Melissa High School represents the very best of what education can offer—innovation, collaboration, and hands-on learning that empowers students to think critically and learn beyond the classroom.” — Marcus Eckert, Principal.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/Screenshot%202025-12-02%20194143.png" alt="Testimonial" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: presentation testimonials. -->
-      <!-- :contentReference[oaicite:11]{index=11} -->
-    </div>
-
-    <div class="card">
-      <div class="sub">Community Impact</div>
-      <h3>Outreach & sustainability</h3>
-      <p class="muted">Mentorship, workshops, and public demonstrations that expand STEM literacy and cultivate future engineers in the local community.</p>
-      <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/5015939936778094013.jpg" style="width:100%;border-radius:8px;margin-top:12px">
-      <!-- source: marketing presentation. -->
-      <!-- :contentReference[oaicite:12]{index=12} -->
-    </div>
-  </div>
-</section>
-
-
-
-<footer>
-  <!-- national logo + required link -->
-  <img src="https://uploads.onecompiler.io/43pz8jcrg/44695znvr/Screenshot%202025-12-02%20194603.png" alt="Paris" class="center">
-  <p class="muted">We have included the national BEST logo and link to their site. Visit: <a href="https://www.bestrobotics.org" target="_blank" rel="noopener" style="color:#fff">bestrobotics.org</a></p>
-  <p style="margin-top:8px;color:var(--muted)">© 2025 RedWing Tech · support@RedWingTech.com</p>
-</footer>
-
-<!-- LOGIN Modal (submits email to Formspree endpoint) -->
-<div class="modal" id="loginModal" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="panel" role="document">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <strong style="font-size:1.05rem">Login / Sign up</strong>
-      <span class="close-x" id="loginClose">✕</span>
-    </div>
-    <form id="loginForm" action="https://formspree.io/f/xrborvzk" method="POST">
-      <label for="email">Email address</label>
-      <input id="email" name="email" type="email" placeholder="you@company.com" required>
-      <label for="name">Full name</label>
-      <input id="name" name="name" type="text" placeholder="Your name" required>
-      <input type="hidden" name="_subject" value="RedWing Website Signup">
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button type="button" class="btn secondary" id="cancelLogin">Cancel</button>
-        <button type="submit" class="btn">Send</button>
+  <div class="app" role="main" id="app-root">
+    <!-- Topbar -->
+    <header class="topbar" id="topbar" role="banner" aria-label="Top navigation">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="site-title">RedWing Tech</div>
+        <div style="font-size:12px;color:var(--muted);margin-left:6px;">Futuristic Robotics Solutions</div>
       </div>
-    </form>
-    <small style="display:block;margin-top:10px;color:var(--muted)">We will contact you within 1-2 buisness days</small>
+
+      <nav class="topnav" role="navigation" aria-label="Primary navigation">
+        <a href="#home" class="nav-link active">Home</a>
+        <a href="#robot" class="nav-link">Robot</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#finance" class="nav-link">Financials</a>
+        <a href="#invest" class="nav-link">Invest</a>
+      </nav>
+
+      <div class="search" role="search" aria-label="Site search">
+        <input id="site-search" placeholder="Search (press Enter)" aria-label="Search the site" />
+        <div style="font-size:16px;opacity:0.9">🔍</div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section id="home" class="hero" aria-labelledby="home-h">
+      <div class="hero-left">
+        <div>
+          <span class="typewriter" id="typewriter" aria-hidden="true"></span>
+          <span class="cursor" aria-hidden="true"></span>
+        </div>
+
+        <div class="hero-sub" id="hero-sub" aria-label="Mission text">
+DELIVER FUTURISTIC ROBOTICS SOLUTIONS
+
+FOSTERING A WORLD POWERED BY AN AI MODEL
+
+ENSURING YOU WITH ADVANCED TECHNOLOGY
+
+WHERE THE EFFECTIVENESS OF OUR AI MODEL
+
+TRANSFORMS THE VISION OF AUTOMATION INTO
+
+REALITY
+        </div>
+
+        <div class="hero-ctas">
+          <button class="btn primary" id="invest-cta">Invest Now</button>
+          <button class="btn ghost" id="explore-cta">Explore Robot</button>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;">
+          <div class="viz-card reveal-hidden" style="min-width:220px;">
+            <div style="text-align:left;">
+              <div style="font-weight:800;color:var(--cardinal-2);margin-bottom:6px">OUR OFFER</div>
+              <div style="color:var(--muted);font-weight:600;">A 20% stake in the company is worth $85,000 to fund our future missions and project development .</div>
+            </div>
+          </div>
+
+          <div class="viz-card reveal-hidden" style="min-width:220px;">
+            <div style="text-align:left;">
+              <div style="font-weight:800;color:var(--cardinal-2);margin-bottom:6px">BUDGET</div>
+              <div style="color:var(--muted);font-weight:600;">Given Budget: + $1500.00 • Materials: - $1350 • Sponsors: + $4,700 • Total: $4850.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right" aria-hidden="false">
+        <div class="visual-grid">
+          <!-- Replace these src attributes with the Base64 data URIs of the real images you want embedded -->
+          <div class="viz-card reveal-hidden">
+            <!-- REPLACE WITH IMAGE: slide1_hero (PASTE DATA URI HERE) -->
+            <img src="data:image/jpeg;base64,REPLACE_WITH_SLIDE1_HERO_BASE64" alt="Hero robot image">
+            <div class="caption">Robot concept (Marketing slide)</div>
+          </div>
+
+          <div class="viz-card reveal-hidden">
+            <!-- REPLACE WITH IMAGE: slide2_visual -->
+            <img src="data:image/jpeg;base64,REPLACE_WITH_SLIDE2_IMAGE_BASE64" alt="Slide visual">
+            <div class="caption">Slide visual</div>
+          </div>
+
+          <div class="viz-card reveal-hidden">
+            <!-- REPLACE WITH IMAGE: notebook_page63 -->
+            <img src="data:image/jpeg;base64,REPLACE_WITH_NOTEBOOK_P63_BASE64" alt="Notebook image">
+            <div class="caption">Engineering Notebook — page 63</div>
+          </div>
+
+          <div class="viz-card reveal-hidden">
+            <!-- REPLACE WITH IMAGE: notebook_page64 -->
+            <img src="data:image/jpeg;base64,REPLACE_WITH_NOTEBOOK_P64_BASE64" alt="Notebook image">
+            <div class="caption">Engineering Notebook — page 64</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SITE OVERVIEW (3-line block) -->
+    <div class="site-overview reveal-hidden" role="region" aria-label="Site overview">
+      <div class="overview-line1">
+        <div class="overview-logo" aria-hidden="true">
+          <!-- REPLACE WITH IMAGE: slide1_logo (PASTE DATA URI HERE) -->
+          <img id="overview-logo-img" src="data:image/png;base64,REPLACE_WITH_SLIDE1_LOGO_BASE64" alt="RedWing logo" style="width:88px;height:88px;object-fit:contain;border-radius:10px;">
+        </div>
+      </div>
+
+      <div class="overview-line2" role="navigation" aria-label="Site pages">
+        <a href="#home">Home</a>
+        <a href="#robot">Robot</a>
+        <a href="#about">About</a>
+        <a href="#finance">Financials</a>
+        <a href="#invest">Invest</a>
+      </div>
+
+      <div class="overview-line3">
+Home — DELIVER FUTURISTIC ROBOTICS SOLUTIONS; FOSTERING A WORLD POWERED BY AN AI MODEL.  
+Robot — RedWing Tech strives to answer the following problem statement with its current product: can the company manufacture an efficient and versatile product that can develop a neural network quickly, collect quality information as network input, and classify the information as either true or false.  
+About — The Robotics program at Melissa High School represents the very best of what education can offer—innovation, collaboration, and hands-on learning that empowers students to think critically and learn beyond the classroom.  
+Financials — Given Budget: + $1500.00; Materials: - $1350; Sponsors: + $4,700; Total: $4850.00.  
+Invest — OUR OFFER — A 20% stake in the company is worth $85,000 to fund our future missions and project development .
+      </div>
+    </div>
+
+    <!-- Robot (verbatim) -->
+    <section id="robot" class="panel reveal-hidden" aria-labelledby="robot-h">
+      <h2 id="robot-h">Robot — Hardware & Process (verbatim)</h2>
+      <p style="color:var(--muted)">
+RedWing Tech strives to answer the following problem statement with its current product: can the company manufacture an efficient and versatile product that can develop a neural network quickly, collect quality information as network input, and classify the information as either true or false, all while adhering to customer and game theme preferences, utilizing a simple design, and expending the least resources and energy?
+      </p>
+
+      <div class="grid-2" style="margin-top:12px;">
+        <div>
+          <h3 style="font-family:'Orbitron',sans-serif;color:var(--cardinal-2);font-size:0.95rem;margin-bottom:8px">Hardware Creation Process</h3>
+          <p style="color:var(--muted)">
+As per the company’s yearly process, the Department of Building decided to implement a zero-turn mechanism to provide rotation for the robot. This allows the robot to turn in place, which is crucial for maneuvering in tight spaces. The company achieved the zero-turn mechanism by using two torque motors, two 11.5” wheels, and two PVC sliders. The two torque motors are connected to the 11.5” wheels that are directly controlled by the VEX5 controller. The PVC sliders are created from two identical 1” diameter PVC pipes that are 7.75” long with a 1.75” crimp on one end so that it is flat, and a 2” long and 2” wide PVC elbow on the other end. At the end of the crimp, the pipe is then heated and bent to a 45 degree angle. The PVC sliders are not connected to any motor, but allows for the robot to have the zero-turn mechanism because of the sliders present along the circumference of the wheel. The base and big wheels are constructed out of wood.
+          </p>
+        </div>
+
+        <div>
+          <h3 style="font-family:'Orbitron',sans-serif;color:var(--cardinal-2);font-size:0.95rem;margin-bottom:8px">Claw / Arm Iterations</h3>
+          <p style="color:var(--muted)">
+Version 1: A small triangular shaped claw with a wide range and motion but it wasn't strong enough. Version 2: A longer version of the previous claw to allow a square shape to hold the connection tiles. Version 3: Rack and pinion to hold the tiles and use the flat sides to pick up Failbook/Tweeter Tower Factoids. Rack & Pinion gives the robot the ability to steadily grab and hold the connection tiles. Attached 4 magnets that can hold the factoids upside down on the claw. Can efficiently always pick up two factoids.
+          </p>
+        </div>
+      </div>
+
+      <p style="color:var(--muted);margin-top:12px;">
+Though not mentioned above, it is also understood that the robot must weigh less than or equal to 24 pounds and be able to maintain dimensions of or under 24” × 24” × 24”.
+      </p>
+    </section>
+
+    <!-- About (verbatim) -->
+    <section id="about" class="panel reveal-hidden" aria-labelledby="about-h">
+      <h2 id="about-h">About — Marketing (verbatim)</h2>
+      <p style="color:var(--muted)">
+The Robotics program at Melissa High School represents the very best of what education can offer—innovation, collaboration, and hands-on learning that empowers students to think critically and learn beyond the classroom. Since 2013, the MHS Robotics teams have advanced to the state level nearly every year, demonstrating an exceptional level of skill and will.
+      </p>
+
+      <p style="color:var(--muted)">
+More than competition, Robotics encourages teamwork, problem-solving, and leadership. It’s inspiring to see our students apply classroom knowledge to real-world challenges while preparing for future STEM careers. I am incredibly proud of our students, coaches, and community supporters who make this program a continued success. Rise and Shine!
+      </p>
+    </section>
+
+    <!-- Financials -->
+    <section id="finance" class="panel reveal-hidden">
+      <h2>Financial Snapshot (verbatim)</h2>
+      <p style="color:var(--muted)">
+Given Budget: + $1500.00<br>
+Materials: - $1350<br>
+Sponsors: + $4,700<br>
+Total:  $4850.00
+      </p>
+    </section>
+
+    <!-- Invest / Contact (verbatim) -->
+    <section id="invest" class="panel reveal-hidden">
+      <h2>Investment Opportunity & Contact (verbatim)</h2>
+      <p style="color:var(--muted)">
+OUR OFFER — A 20% stake in the company is worth $85,000 to fund our future missions and project development .
+      </p>
+
+      <p style="color:var(--muted)">
+support@RedWingTech.com<br>
+RedWingTech.com<br>
++1 800-RedWing
+      </p>
+    </section>
+
+    <!-- Safety -->
+    <section id="safety" class="panel reveal-hidden">
+      <h2>Safety Protocol (verbatim)</h2>
+      <p style="color:var(--muted)">
+Throughout the entirety of the season, safety has been RedWing Tech’s utmost priority, and a multitude of safety practices were utilized prior to and throughout the construction of the company’s product. Before the establishment of the safety contract, RedWing Tech assembled all of its members in the workshop and, with its coach and other affiliated engineers, taught them how to use the tools available within the workshop safely and properly.
+      </p>
+      <p style="color:var(--muted)"><strong>OSHA Certification:</strong> The company has designated multiple members with OSHA Certification to serve as safety advisors within the workshop.</p>
+    </section>
+
+    <!-- Newsletter at bottom -->
+    <div class="newsletter reveal-hidden" style="margin-top:20px;">
+      <input id="newsletter-email" type="email" placeholder="Enter your email to subscribe for investor updates" aria-label="Email address" />
+      <button class="btn primary" id="newsletter-btn">Subscribe</button>
+    </div>
+
+    <div style="margin-top:8px;color:var(--muted);font-weight:600;font-size:0.95rem;line-height:1.4;">
+      We will reach out to you within 1–2 business days.
+    </div>
+
+    <footer class="sitefoot" role="contentinfo">
+      <div style="font-weight:700;color:var(--cardinal-2);">© 2025 RedWing Tech</div>
+      <div style="margin-top:6px;color:var(--muted)">Melissa High School Robotics Team #0219 • support@RedWingTech.com</div>
+    </footer>
   </div>
-</div>
 
-<script>
-/* ===== typing animation (red) — exact phrases used earlier ===== */
-const phrases = [
-  "Empowering Future Engineers.",
-  "Building Intelligent Robotics.",
-  "Automation for Tomorrow."
-];
-let pIndex = 0, ch = 0, del = false;
-const tw = document.getElementById('typewriter');
+  <script>
+    /* Typing animation (Lexend red) */
+    document.addEventListener('DOMContentLoaded', () => {
+      const text = "RedWing Tech";
+      const el = document.getElementById('typewriter');
+      let idx = 0;
+      const delay = 90; // ms per char
+      function step() {
+        if (idx <= text.length) {
+          el.textContent = text.slice(0, idx);
+          idx++;
+          setTimeout(step, delay);
+        }
+      }
+      setTimeout(step, 300);
 
-function typeLoop(){
-  const cur = phrases[pIndex];
-  if(!del){
-    tw.textContent = cur.slice(0, ++ch);
-    if(ch === cur.length + 1){ del = true; setTimeout(typeLoop, 1000); return; }
-    setTimeout(typeLoop, 80);
-  } else {
-    tw.textContent = cur.slice(0, --ch);
-    if(ch === 0){ del = false; pIndex = (pIndex + 1) % phrases.length; setTimeout(typeLoop, 400); return; }
-    setTimeout(typeLoop, 40);
-  }
-}
-typeLoop();
+      /* Header auto-hide */
+      const topbar = document.getElementById('topbar');
+      let lastY = window.scrollY;
+      window.addEventListener('scroll', () => {
+        const current = window.scrollY;
+        if (current > lastY && current > 80) topbar.classList.add('hidden'); else topbar.classList.remove('hidden');
+        lastY = current;
+      }, {passive:true});
 
-/* ===== Populate preview dropdowns with page headings (and anchors) =====
-   These headings match the sections on the pages and are the links users requested.
-*/
-const navHeadings = {
-  
-  
-};
+      /* Clickable corner logo -> scroll home */
+      document.getElementById('corner-logo').addEventListener('click', ()=> document.getElementById('home').scrollIntoView({behavior:'smooth'}));
+      document.getElementById('corner-logo').addEventListener('keydown', (e)=> { if(e.key==='Enter') document.getElementById('home').scrollIntoView({behavior:'smooth'}); });
 
-document.querySelectorAll('.preview').forEach(el=>{
-  const key = el.getAttribute('data-for') || 'home';
-  const list = navHeadings[key] || [];
-  el.innerHTML = list.map(s=>{
-    const anchor = s.replace(/\s+/g,'').toLowerCase();
-    // determine target page file name
-    let page = 'index.html';
-    if(key !== 'home') page = key + '.html';
-    return `<a href="${page}#${anchor}" onclick="navPreviewClick(event,'${page}','${anchor}')">${s}</a>`;
-  }).join('');
-});
+      /* Nav links */
+      document.querySelectorAll('nav.topnav a').forEach(a => a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = a.getAttribute('href').slice(1);
+        const tgt = document.getElementById(href);
+        if(tgt) tgt.scrollIntoView({behavior:'smooth', block:'start'});
+      }));
 
-/* keep preview open while hovered; also allow it to persist until click outside (user requested) */
-let openPreview = null;
-document.querySelectorAll('.nav-item').forEach(item=>{
-  item.addEventListener('mouseenter', ()=> {
-    document.querySelectorAll('.preview').forEach(p=>p.style.display='none');
-    const preview = item.querySelector('.preview');
-    if(preview) { preview.style.display = 'flex'; openPreview = preview; }
-  });
-});
-document.addEventListener('click', (e)=>{
-  if(!e.target.closest('.nav-item')) {
-    document.querySelectorAll('.preview').forEach(p=>p.style.display='none');
-    openPreview = null;
-  }
-});
+      /* Search quick navigation (verbatim keywords) */
+      document.getElementById('site-search').addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter') {
+          const q = e.target.value.toLowerCase();
+          if(q.includes('robot') || q.includes('hardware')) location.hash = '#robot';
+          else if(q.includes('mission')) location.hash = '#about';
+          else if(q.includes('invest') || q.includes('offer')) location.hash = '#invest';
+          else if(q.includes('budget') || q.includes('financial')) location.hash = '#finance';
+          else if(q.includes('safety') || q.includes('osha')) location.hash = '#safety';
+          else location.hash = '#home';
+        }
+      });
 
-/* when clicking an entry: if same page, smooth-scroll to anchor; otherwise navigate to page#anchor */
-function navPreviewClick(e, href, anchor){
-  e.preventDefault();
-  const current = location.pathname.split('/').pop() || 'index.html';
-  const target = href.split('/').pop();
-  if(target === current || href === 'index.html'){
-    const anchorEl = document.getElementById(anchor);
-    if(anchorEl) { anchorEl.scrollIntoView({behavior:'smooth'}); closePreviews(); return; }
-  }
-  // navigate to other page with small transition (keeps UX smooth)
-  document.body.style.pointerEvents = 'none';
-  setTimeout(()=> location.href = href + '#' + anchor, 160);
-}
-function closePreviews(){ document.querySelectorAll('.preview').forEach(p=>p.style.display='none'); openPreview = null; }
+      /* Reveal on scroll */
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            entry.target.classList.add('reveal-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {threshold:0.12});
+      document.querySelectorAll('.reveal-hidden').forEach(el => observer.observe(el));
 
-/* ===== Search quick nav  ===== */
-document.getElementById('siteSearch').addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){
-    const q = e.target.value.trim().toLowerCase();
-    if(!q) return;
-    if(q.includes('mission')) scrollTo('mission');
-    else if(q.includes('engineering')) scrollTo('engineering');
-    else if(q.includes('order') || q.includes('pre')) location.href = 'order.html';
-    else alert('No quick match found on the homepage.');
-  }
-});
-
-/* ===== smooth reveal on scroll ===== */
-const reveal = ()=>{
-  document.querySelectorAll('.fade').forEach(el=>{
-    const r = el.getBoundingClientRect();
-    if(r.top < window.innerHeight - 80) el.classList.add('show');
-  });
-};
-window.addEventListener('scroll', reveal);
-reveal();
-
-/* scroll helper */
-function scrollTo(id){
-  const el = document.getElementById(id);
-  if(el) el.scrollIntoView({behavior:'smooth'});
-}
-
-/* ===== LOGIN modal wiring (Formspree) ===== */
-const loginOpen = document.getElementById('loginOpen');
-const loginModal = document.getElementById('loginModal');
-const loginClose = document.getElementById('loginClose');
-const cancelLogin = document.getElementById('cancelLogin');
-
-loginOpen.addEventListener('click', ()=> {
-  loginModal.style.display = 'flex';
-  loginModal.setAttribute('aria-hidden','false');
-});
-loginClose.addEventListener('click', closeLogin);
-cancelLogin.addEventListener('click', closeLogin);
-function closeLogin(){
-  loginModal.style.display = 'none';
-  loginModal.setAttribute('aria-hidden','true');
-}
-
-/* close modal on outside click */
-loginModal.addEventListener('click', (e)=> {
-  if(e.target === loginModal) closeLogin();
-});
-
-/* optionally: after Formspree submit, show a confirmation (Formspree will redirect if configured) */
-document.getElementById('loginForm').addEventListener('submit', (e)=>{
-  // Let the browser handle the POST; show a quick "sending" state
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  btn.textContent = 'Sending...';
-  // do not prevent default (Formspree will handle)
-});
-
-/* keep nav previews accessible on keyboard: hide all previews when tabbing away */
-document.addEventListener('keydown', (e)=> {
-  if(e.key === 'Escape') closePreviews();
-});
-</script>
-
-<!-- SOURCES: homepage content pulled from marketing presentation and engineering notebook. -->
-<!-- Marketing presentation: :contentReference[oaicite:14]{index=14} :contentReference[oaicite:15]{index=15} -->
-<!-- Engineering notebook: :contentReference[oaicite:16]{index=16} :contentReference[oaicite:17]{index=17} -->
-
+      /* Newsletter */
+      document.getElementById('newsletter-btn').addEventListener('click', () => {
+        const email = document.getElementById('newsletter-email').value;
+        if(!email){ alert('Please enter an email.'); return; }
+        const btn = document.getElementById('newsletter-btn');
+        btn.disabled = true; btn.textContent = 'Sent ✓';
+        setTimeout(()=>{ btn.disabled=false; btn.textContent='Subscribe'; }, 2200);
+        alert('Thank you — we will reach out to you within 1–2 business days. Email: ' + email);
+        document.getElementById('newsletter-email').value = '';
+      });
+    });
+  </script>
 </body>
 </html>
-
-
